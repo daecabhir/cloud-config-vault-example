@@ -1,0 +1,15 @@
+{
+  "name": "config-client",
+  "version": "1.0.0",
+  "description": "Test client for Spring Config Server",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cloud-config-client": "^1.5.2",
+    "spring-cloud-config": "^4.6.6"
+  }
+}
