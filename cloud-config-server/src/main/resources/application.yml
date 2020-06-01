@@ -1,0 +1,26 @@
+server:
+  port: 8888
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+spring:
+  profiles:
+    active: git, vault
+  cloud:
+    config:
+      server:
+        git:
+          uri: file://${HOME}/projects/cloud-config
+          order: 2
+
+        vault:
+          host: 127.0.0.1
+          port: 8200
+          authentication: TOKEN
+          token: myroot
+          kv-version: 2
+          order: 1
