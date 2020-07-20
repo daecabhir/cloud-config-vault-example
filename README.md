@@ -76,3 +76,12 @@ to display the configuration properties known to the client applications at run-
 1. Add the ability to manage secret properties through the Cloud Config Server
 using an Angular SPA, with authentication and authorization.
 1. Add client implementations in Python, Rust and maybe Go.
+
+## Implementation Notes
+
+* As of this writing, when querying the Spring Cloud Config server's configuration
+endpoint, you _must_ specify a profile, even if you want the 'default' profile. The
+server does expose an endpoint where you can just specify the application.
+* As of right now, I have not been able to get the config server to merge in an
+`application.ynl` file in the native provider's configuration directory like it
+supposedly does with GitHub repositories.

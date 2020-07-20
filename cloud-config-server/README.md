@@ -16,8 +16,8 @@ Cloud Config Server.
 
 Specific milestones for this module are:
 
-1. Update build so that this project is actually a submodule of the Gradle build
-for the parent.
+1. ~~Update build so that this project is actually a submodule of the Gradle build
+for the parent.~~
 1. Update the build so that it can launch the Vault Docker container during bootRun
 1. Update build so that it includes integration tests to verify proper configuration,
 including launching and pre-loading Vault with secret values.

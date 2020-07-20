@@ -1,0 +1,8 @@
+app:
+  property3: three
+  property4:
+    - 1
+    - 2
+    - 3
+    - 4
+message: Look at me!

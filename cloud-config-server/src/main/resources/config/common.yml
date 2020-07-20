@@ -1,0 +1,4 @@
+app:
+  property1: abc
+  property2: 2
+message: World!
