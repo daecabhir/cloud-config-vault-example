@@ -1,2 +1,3 @@
 rootProject.name = 'cloud-config-vault-example'
 include 'cloud-config-server'
+include 'cloud-config-client'
