@@ -1,7 +1,9 @@
 plugins {
-  id 'org.springframework.boot' version '2.3.0.RELEASE' apply false
-  id 'io.spring.dependency-management' version '1.0.9.RELEASE' apply false
   id 'idea'
+  id 'org.springframework.boot' version '2.3.0.RELEASE'
+  id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+  id 'org.unbroken-dome.test-sets' version '3.0.1'
+  id 'com.avast.gradle.docker-compose' version '0.13.4'
 }
 
 ext {
@@ -11,6 +13,18 @@ ext {
 allprojects {
   repositories {
     mavenCentral()
+  }
+
+  apply {
+    plugin 'idea'
+    plugin 'com.avast.gradle.docker-compose'
+  }
+
+  // Default plugin configuration for all subprojects
+  dockerCompose {
+    useComposeFiles = [ 'docker-compose.yml']
+    waitForTcpPorts = true
+    captureContainersOutput = true
   }
 
   version = '0.0.1-SNAPSHOT'
@@ -26,9 +40,10 @@ springBootProjects.each { springBootProject ->
     println("Configuring $name as a Spring Boot project")
 
     apply {
-      plugin("org.springframework.boot")
-      plugin("io.spring.dependency-management")
-      plugin("java")
+      plugin 'java'
+      plugin 'org.springframework.boot'
+      plugin 'io.spring.dependency-management'
+      plugin 'org.unbroken-dome.test-sets'
     }
 
     group = "com.daecabhir"
@@ -56,8 +71,23 @@ springBootProjects.each { springBootProject ->
     }
 
     bootRun {
+      doLast {
+        dockerCompose.composeDown(bootRun)
+      }
+
       if (project.hasProperty('args')) {
         args project.args.split(',')
+      }
+    }
+
+    composeUp {
+      dependsOn bootJar
+    }
+
+    dockerCompose {
+      bootRun {
+        useComposeFiles = [ 'docker-compose.dev.yml' ]
+        isRequiredBy project.tasks.bootRun
       }
     }
   }
