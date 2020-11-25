@@ -1,0 +1,64 @@
+plugins {
+  id 'org.springframework.boot' version '2.3.0.RELEASE' apply false
+  id 'io.spring.dependency-management' version '1.0.9.RELEASE' apply false
+  id 'idea'
+}
+
+ext {
+   set('springCloudVersion', "Hoxton.SR4")
+}
+
+allprojects {
+  repositories {
+    mavenCentral()
+  }
+
+  version = '0.0.1-SNAPSHOT'
+}
+
+def springBootProjects = [
+  project(":cloud-config-server"),
+  project(":cloud-config-client")
+]
+
+springBootProjects.each { springBootProject ->
+  configure(springBootProject) {
+    println("Configuring $name as a Spring Boot project")
+
+    apply {
+      plugin("org.springframework.boot")
+      plugin("io.spring.dependency-management")
+      plugin("java")
+    }
+
+    group = "com.daecabhir"
+    sourceCompatibility = "11"
+
+    dependencies {
+      implementation 'org.springframework.boot:spring-boot-starter-actuator'
+      implementation 'org.springframework.boot:spring-boot-starter-web'
+      developmentOnly 'org.springframework.boot:spring-boot-devtools'
+      testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+      }
+    }
+
+    dependencyManagement {
+      imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+      }
+    }
+
+    tasks {
+      test {
+        useJUnitPlatform()
+      }
+    }
+
+    bootRun {
+      if (project.hasProperty('args')) {
+        args project.args.split(',')
+      }
+    }
+  }
+}

@@ -9,8 +9,8 @@ be leveraged in a cloud provider agnostic way across multiple languages.
 
 Specific milestones for this module are:
 
-1. Update build so that this project is actually a submodule of the Gradle build
-for the parent.
+1. ~~Update build so that this project is actually a submodule of the Gradle build
+for the parent.~~
 1. Update build so that the `bootRun` task depends on a running instance of the
 [Cloud Config Serer](../cloud-config-server) backed by HashiCorp Vault.
 1. Update build so that it includes integration tests with a running instance of
