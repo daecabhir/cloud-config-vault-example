@@ -1,8 +1,13 @@
+#
+# Starts HashiCorp Vault up locally in 'development' mode, as that's all we
+# need for now to test.
+#
+---
 version: "3.8"
 services:
 
   dev-vault:
-    image: 'vault:1.4.2'
+    image: 'vault:1.6.0'
     cap_add:
       - IPC_LOCK
     environment:

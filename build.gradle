@@ -70,18 +70,14 @@ springBootProjects.each { springBootProject ->
       }
     }
 
+    composeUp {
+      dependsOn bootJar
+    }
+
     bootRun {
       doLast {
         dockerCompose.composeDown(bootRun)
       }
-
-      if (project.hasProperty('args')) {
-        args project.args.split(',')
-      }
-    }
-
-    composeUp {
-      dependsOn bootJar
     }
 
     dockerCompose {
