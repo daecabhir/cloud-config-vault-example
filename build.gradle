@@ -4,6 +4,7 @@ plugins {
   id 'io.spring.dependency-management' version '1.0.9.RELEASE'
   id 'org.unbroken-dome.test-sets' version '3.0.1'
   id 'com.avast.gradle.docker-compose' version '0.13.4'
+  id 'io.freefair.lombok' version '5.3.0'
 }
 
 ext {
@@ -17,6 +18,7 @@ allprojects {
 
   apply {
     plugin 'idea'
+    plugin 'io.freefair.lombok'
     plugin 'com.avast.gradle.docker-compose'
   }
 
@@ -52,7 +54,13 @@ springBootProjects.each { springBootProject ->
     dependencies {
       implementation 'org.springframework.boot:spring-boot-starter-actuator'
       implementation 'org.springframework.boot:spring-boot-starter-web'
+
       developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+      testImplementation 'org.hamcrest:hamcrest:2.2'
+      testImplementation('org.springframework.vault:spring-vault-core') {
+        exclude group: 'commons-logging', module: 'commons-logging'
+      }
       testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
       }
@@ -61,12 +69,34 @@ springBootProjects.each { springBootProject ->
     dependencyManagement {
       imports {
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+        mavenBom 'org.springframework.vault:spring-vault-dependencies:2.2.2.RELEASE'
       }
     }
 
     tasks {
-      test {
-        useJUnitPlatform()
+      withType(JavaCompile) {
+        options.compilerArgs << '-Xlint:unchecked'
+        options.deprecation = true
+      }
+    }
+
+    test {
+      useJUnitPlatform()
+      testLogging {
+        exceptionFormat = 'full'
+      }
+      failFast = false
+    }
+
+    testSets {
+      integrationTest {
+        dirName = "integration-test"
+      }
+    }
+
+    integrationTest {
+      doLast {
+        dockerCompose.composeDown(integrationTest)
       }
     }
 
@@ -84,6 +114,11 @@ springBootProjects.each { springBootProject ->
       bootRun {
         useComposeFiles = [ 'docker-compose.dev.yml' ]
         isRequiredBy project.tasks.bootRun
+      }
+
+      integrationTest {
+        useComposeFiles = [ 'docker-compose.dev.yml' ]
+        isRequiredBy project.tasks.integrationTest
       }
     }
   }

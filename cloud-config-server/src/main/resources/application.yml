@@ -22,5 +22,6 @@ spring:
           port: 8200
           authentication: TOKEN
           token: myroot
+          backend: secrets
           kv-version: 2
           order: 2
