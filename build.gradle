@@ -78,14 +78,13 @@ springBootProjects.each { springBootProject ->
         options.compilerArgs << '-Xlint:unchecked'
         options.deprecation = true
       }
-    }
-
-    test {
-      useJUnitPlatform()
-      testLogging {
-        exceptionFormat = 'full'
+      withType(Test) {
+        useJUnitPlatform()
+        testLogging {
+          exceptionFormat = 'full'
+        }
+        failFast = false
       }
-      failFast = false
     }
 
     testSets {

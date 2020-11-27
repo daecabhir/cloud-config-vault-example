@@ -16,6 +16,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.vault.core.VaultTemplate;
 import org.springframework.vault.support.VaultResponseSupport;
 
+
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 // Have to list them all because it doesn't want to pick them up from src/main/resources/application.yml
