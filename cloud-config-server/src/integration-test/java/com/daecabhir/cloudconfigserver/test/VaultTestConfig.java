@@ -23,11 +23,13 @@ public class VaultTestConfig extends AbstractVaultConfiguration {
     this.vaultPort = vaultPort;
     this.authToken = authToken;
   }
+
   @Override
   public VaultEndpoint vaultEndpoint() {
     final VaultEndpoint endpoint = new VaultEndpoint();
     endpoint.setHost(vaultHost);
     endpoint.setPort(vaultPort);
+    endpoint.setScheme("http");
     return endpoint;
   }
 

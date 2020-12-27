@@ -13,8 +13,9 @@ import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.vault.core.VaultTemplate;
+import org.springframework.vault.core.VaultVersionedKeyValueOperations;
 import org.springframework.vault.support.VaultResponseSupport;
+import org.springframework.vault.support.Versioned;
 
 
 @SpringBootTest
@@ -23,8 +24,10 @@ import org.springframework.vault.support.VaultResponseSupport;
 @ActiveProfiles({"test", "native", "vault"})
 public class CloudConfigServerApplicationTests {
 
+	private static final String CLIENT_APP_KEY = "secret/client-app/cloud-config-server";
+
 	@Autowired
-	private VaultTemplate vaultTemplate;
+	private VaultVersionedKeyValueOperations kvOperations;
 
 	private ClientAppSecrets secrets;
 
@@ -34,12 +37,12 @@ public class CloudConfigServerApplicationTests {
 		secrets.setUsername("myuser");
 		secrets.setPassword("mypassword");
 
-		vaultTemplate.write("secrets/client-app", secrets);
+		kvOperations.put(CLIENT_APP_KEY, secrets);
 	}
 
 	@Test
 	public void secretsStored () {
-		VaultResponseSupport<ClientAppSecrets> response = vaultTemplate.read("secrets/client-app", ClientAppSecrets.class);
+		Versioned<ClientAppSecrets> response = kvOperations.get(CLIENT_APP_KEY, ClientAppSecrets.class);
 		ClientAppSecrets storedSecrets = response.getData();
 		assertThat(storedSecrets, is(equalTo(secrets)));
 	}
