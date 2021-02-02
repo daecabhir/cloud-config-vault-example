@@ -3,3 +3,8 @@ test:
     host: 127.0.0.1
     port: 8200
     token: myroot
+    secretsPath: secret
+
+logging:
+  level:
+    org.springframework.vault: DEBUG
